@@ -1,0 +1,58 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build
+dist/
+build/
+.next/
+.turbo/
+out/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# infra
+infra/caddy/data/
+infra/caddy/config/
+postgres-data/
+minio-data/
+redis-data/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor / local agent state
+.vscode/
+.idea/
+*.swp
+.claude/
+
+# coverage
+coverage/
+playwright-report/
+test-results/
+
+# misc
+*.local
+.eslintcache
+
+# tesseract.js Node cache (the browser asset is public/tesseract/eng.traineddata.gz)
+apps/web/eng.traineddata
+
+# OpenNext and wrangler
+.open-next/
+.wrangler/
+.dev.vars
+src/lib/blog-content.generated.ts
