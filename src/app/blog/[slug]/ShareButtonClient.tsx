@@ -1,16 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
-import { Button } from "@efolusi/meridian";
+import { Icon } from "@efolusi/meridian";
 
-export function ShareButtonClient({
-  share,
-  copied: copiedLabel,
-}: {
-  share: string;
-  copied: string;
-}) {
+/** Copies the post's URL. The label changes for a moment to confirm it. */
+export function ShareButtonClient({ share, copied: copiedLabel }: { share: string; copied: string }) {
   const [copied, setCopied] = useState(false);
   async function copy() {
     try {
@@ -18,13 +12,13 @@ export function ShareButtonClient({
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      /* ignore */
+      // Clipboard blocked: the address bar still has the link.
     }
   }
   return (
-    <Button type="button" onClick={copy} variant="secondary" size="sm">
-      {copied ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2.5} />}
+    <button type="button" onClick={copy} className="ef-btn ef-btn--secondary ef-btn--md" aria-live="polite">
+      <Icon name={copied ? "check" : "link"} size={16} />
       {copied ? copiedLabel : share}
-    </Button>
+    </button>
   );
 }

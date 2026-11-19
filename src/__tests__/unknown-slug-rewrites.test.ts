@@ -30,14 +30,17 @@ describe("unknown tool and blog paths", () => {
 
   it("sends unknown ids and slugs to a path no route serves", () => {
     for (const rule of unknownSlugRewrites()) expect(rule.destination).toBe(NOT_FOUND_DESTINATION);
-    for (const path of ["/blog/nope", "/en/blog/nope", "/id/blog/nope"]) {
+    for (const path of ["/blog/nope", "/en/blog/nope", "/id/blog/nope", "/tool/nope", "/id/tool/nope"]) {
       expect(rewritten(path), path).toBe(true);
     }
   });
 
   it("leaves real tools, real posts and other pages alone", () => {
     const slug = blogSlugs()[0];
+    const id = catalogToolIds()[0];
     for (const path of [
+      `/tool/${id}`,
+      `/en/tool/${id}`,
       `/blog/${slug}`,
       `/id/blog/${slug}`,
       "/blog",

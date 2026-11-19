@@ -1,16 +1,14 @@
-// Blog index: single route, two languages. Only the chrome (headings, labels,
-// newsletter, dates) is localized — post titles, summaries and bodies are
-// written content and stay in the language they were written in.
+// Blog index. A post with an Indonesian version lists in Indonesian on /id;
+// the others keep their English title and are marked lang="en".
 
 import type { Metadata } from "next";
-
-import { SiteNav, SiteFooter } from "~/components/SiteNav";
+import { PageShell } from "~/components/PageShell";
+import { Accented } from "~/components/Accented";
 import { dictionaries } from "~/lib/i18n";
 import { localeAlternates } from "~/lib/locale-routing";
 import { requestLocale } from "~/lib/request-locale";
 import { getAllPosts } from "~/lib/blog";
 import { BlogIndex } from "./BlogIndex";
-
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await requestLocale();
@@ -18,21 +16,22 @@ export async function generateMetadata(): Promise<Metadata> {
   return { alternates: localeAlternates(locale, "/blog"), title: { absolute: t.metaTitle }, description: t.metaDescription };
 }
 
-export default async function BlogIndexPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ newsletter?: string }>;
-}) {
+export default async function BlogIndexPage({ searchParams }: { searchParams: Promise<{ newsletter?: string }> }) {
   const { newsletter } = await searchParams;
   const locale = await requestLocale();
-  const posts = await getAllPosts();
+  const t = dictionaries[locale].blog;
+  const posts = await getAllPosts(locale);
   return (
-    <div style={{ background: "var(--bg-base)", color: "var(--text-primary)", minHeight: "100vh" }}>
-      <SiteNav active="blog" locale={locale} />
-      <main id="main" tabIndex={-1}>
-      <BlogIndex posts={posts} newsletterStatus={newsletter} locale={locale} t={dictionaries[locale].blog} />
-      </main>
-      <SiteFooter locale={locale} />
-    </div>
+    <PageShell locale={locale} active="blog">
+      <section className="page-head">
+        <div className="wrap">
+          <h1 className="display-1">
+            <Accented parts={t.title} />
+          </h1>
+          <p className="lede">{t.lead}</p>
+        </div>
+      </section>
+      <BlogIndex posts={posts} newsletterStatus={newsletter} locale={locale} t={t} />
+    </PageShell>
   );
 }

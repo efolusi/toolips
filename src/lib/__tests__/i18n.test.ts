@@ -45,7 +45,7 @@ describe("dictionaries", () => {
     // block most likely to be pasted across while the rest is being worked on.
     const en = dictionaries.en.hero;
     const id = dictionaries.id.hero;
-    for (const key of ["eyebrow", "lead", "searchPlaceholder", "searchAria", "browse"] as const) {
+    for (const key of ["proof", "lead", "searchPlaceholder", "searchLabel", "find"] as const) {
       expect(id[key], `hero.${key} is still English`).not.toBe(en[key]);
       expect(id[key].trim().length).toBeGreaterThan(0);
     }

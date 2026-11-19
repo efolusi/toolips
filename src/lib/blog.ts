@@ -6,10 +6,11 @@
 
 import matter from "gray-matter";
 import { escapeHtml, escapeHtmlAttribute } from "~/lib/core/escape";
-import { BLOG_SOURCES } from "~/lib/blog-content.generated";
+import { BLOG_SOURCES, BLOG_SOURCES_ID } from "~/lib/blog-content.generated";
+import type { Locale } from "~/lib/i18n";
 
-export type BlockColor = 1 | 2 | 3;
 export type BlogCategory = "Engineering" | "Design" | "Product" | "Changelog";
+const CATEGORIES: BlogCategory[] = ["Engineering", "Design", "Product", "Changelog"];
 
 export interface Post {
   slug: string;
@@ -17,54 +18,50 @@ export interface Post {
   date: string;
   summary: string;
   html: string;
-  // Editorial fields — added in design v2. All optional for backward compat.
   category: BlogCategory;
   author: string;
-  read: number;          // minutes
-  block: BlockColor;     // 1=teal, 2=butter, 3=clay (for hero block)
-  featured: boolean;
+  /** Minutes. */
+  read: number;
+  /** The language this copy of the post is written in. */
+  lang: Locale;
 }
 
-export async function getAllPosts(): Promise<Post[]> {
-  const posts = await Promise.all(Object.keys(BLOG_SOURCES).map((slug) => readPost(slug)));
+/** Every post, newest first, in `locale` where a translation exists. */
+export async function getAllPosts(locale: Locale = "en"): Promise<Post[]> {
+  const posts = Object.keys(BLOG_SOURCES).map((slug) => readPost(slug, locale));
   return posts
     .filter((p): p is Post => p !== null)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export async function getPost(slug: string): Promise<Post | null> {
-  return readPost(slug);
+export async function getPost(slug: string, locale: Locale = "en"): Promise<Post | null> {
+  return readPost(slug, locale);
 }
 
-async function readPost(slug: string): Promise<Post | null> {
-  // A slug must be a simple kebab token and a known post.
+function readPost(slug: string, locale: Locale): Post | null {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) return null;
-  const raw = Object.hasOwn(BLOG_SOURCES, slug) ? BLOG_SOURCES[slug] : undefined;
-  if (raw === undefined) return null;
+  if (!Object.hasOwn(BLOG_SOURCES, slug)) return null;
+  const translated = locale === "id" && Object.hasOwn(BLOG_SOURCES_ID, slug);
+  const raw = (translated ? BLOG_SOURCES_ID[slug] : BLOG_SOURCES[slug]) ?? "";
   try {
     const { data, content } = matter(raw);
     const cat = String(data.category ?? "Engineering");
-    const validCats: BlogCategory[] = ["Engineering", "Design", "Product", "Changelog"];
-    const category = (validCats.includes(cat as BlogCategory) ? cat : "Engineering") as BlogCategory;
-    const block = ([1, 2, 3].includes(Number(data.block)) ? Number(data.block) : 1) as BlockColor;
     return {
       slug,
       title: String(data.title ?? slug),
       date: String(data.date ?? ""),
       summary: String(data.summary ?? ""),
       html: tinyMd(content),
-      category,
+      category: CATEGORIES.includes(cat as BlogCategory) ? (cat as BlogCategory) : "Engineering",
       author: String(data.author ?? "Toolips Team"),
       read: Math.max(1, Number(data.read) || Math.ceil(content.split(/\s+/).length / 220)),
-      block,
-      featured: Boolean(data.featured),
+      lang: translated ? "id" : "en",
     };
   } catch {
     return null;
   }
 }
 
-// Minimal markdown to HTML — paragraphs, headings, bold, italic, code, links.
 function tinyMd(src: string): string {
   const links: string[] = [];
   const withLinkPlaceholders = src.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, text: string, href: string) => {
@@ -82,7 +79,14 @@ function tinyMd(src: string): string {
     .replace(/_([^_]+)_/g, "<em>$1</em>")
     .replace(/\u0000LINK:(\d+)\u0000/g, (_m, i: string) => links[Number(i)] ?? "")
     .split(/\n\n+/)
-    .map((block) => (block.match(/^<(h\d|ul|ol|pre)/) ? block : `<p>${block.replace(/\n/g, "<br/>")}</p>`))
+    .map((block) => {
+      if (block.match(/^<(h\d|ul|ol|pre)/)) return block;
+      const lines = block.split("\n");
+      if (lines.every((l) => l.startsWith("- "))) {
+        return `<ul>${lines.map((l) => `<li>${l.slice(2)}</li>`).join("")}</ul>`;
+      }
+      return `<p>${block.replace(/\n/g, "<br/>")}</p>`;
+    })
     .join("\n");
 }
 

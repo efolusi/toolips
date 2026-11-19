@@ -1,17 +1,19 @@
 /**
- * The landing page and the shared chrome, in the two languages Toolips sells in.
+ * Every page of the site, in the two languages Toolips sells in.
  *
- * SCOPE IS DELIBERATE. The hub landing page, the chrome around it (nav, footer,
- * hub grid, metadata), pricing, sign-in, the 404, the docs page, and the blog
- * CHROME (index, labels, newsletter, post furniture) are translated. The 83
- * tool pages stay English for now, and so do the written BODIES of blog posts:
- * a post's prose is content, not chrome, and translating it is an editorial
- * decision rather than a dictionary entry. Translating them later costs the
- * same; translating them badly now has to be undone first.
+ * The pages, the chrome around them (header, footer, metadata) and the tool
+ * pages are translated here. Two things live elsewhere: the legal documents
+ * (src/lib/legal.ts, long prose with dates and addresses) and the tool names
+ * and descriptions (src/lib/tool-copy.ts). Blog posts are content: a short post
+ * has an Indonesian version in content/blog/id, a long one shows a note that it
+ * is in English.
  *
  * NUMBERS NEVER LIVE HERE. Every measured figure the copy quotes comes from
  * src/lib/site-facts.ts and arrives as a {count}, {limit} or {price} token, so a
  * translation cannot quietly change what the page claims about the product.
+ *
+ * Headings that carry an accent word are three-part arrays: lead, accent, trail.
+ * The accent is the one italic word the page sets in the brand colour.
  */
 
 export const LOCALES = ["en", "id"] as const;
@@ -26,6 +28,9 @@ export function isLocale(value: string | undefined | null): value is Locale {
   return value === "en" || value === "id";
 }
 
+type Accented = [string, string, string];
+type Item = { name: string; desc: string };
+
 export interface Dictionary {
   /** The `lang` attribute on <html>, and the OpenGraph locale beside it. */
   htmlLang: string;
@@ -38,42 +43,36 @@ export interface Dictionary {
   nav: {
     tools: string;
     pricing: string;
-    api: string;
     docs: string;
     blog: string;
     goPro: string;
-    goProAria: string;
     signIn: string;
-    /** Carries {email}. */
-    accountAria: string;
     openMenu: string;
+    closeMenu: string;
     /** First Tab stop on every page; jumps past the header to <main id="main">. */
     skipToContent: string;
     /**
      * The switch to the other language: the two-letter label a reader sees and
-     * the accessible name, both written IN the language being switched to, so
-     * the link makes sense to the person who needs it.
+     * the accessible name, both written IN the language being switched to.
      */
     otherLanguage: string;
     otherLanguageAria: string;
+    themeToDark: string;
+    themeToLight: string;
   };
   hero: {
-    /** Proof line under the search. Carries {free} and {pro}. */
-    eyebrow: string;
-    /** [lead, emphasised word, trail]; the middle part renders in italic accent. */
-    title: string[];
+    /** Carries {free} and {pro}. */
+    proof: string;
+    title: Accented;
     /** Carries {count}. */
     lead: string;
-    /** Carries {count}. */
     searchPlaceholder: string;
-    searchAria: string;
-    browse: string;
+    searchLabel: string;
+    find: string;
   };
   grid: {
-    /** [lead, emphasised word, trail]. */
-    title: string[];
+    title: Accented;
     lede: string;
-    /** Carries {count} — the number of tools matching the current filter. */
     resultCount: string;
     emptyTitle: string;
     emptyBody: string;
@@ -81,158 +80,149 @@ export interface Dictionary {
     clearSearch: string;
   };
   ways: {
-    /** [lead, emphasised word, trail]. */
-    title: string[];
+    title: Accented;
     lede: string;
     web: { title: string; body: string; cta: string };
     api: { title: string; body: string; cta: string };
     mcp: { title: string; body: string; cta: string };
   };
   upgrade: {
-    /** Carries {limit}. */
     title: string;
     body: string;
-    /** Carries {price}. */
     cta: string;
   };
-  /** Shown once after an account deletion redirects back to the hub. */
   accountDeleted: string;
-  /**
-   * The small chrome around a tool page: breadcrumb, tier badge, the free-limit
-   * note and the pro gate. The tool's own name and description come from the
-   * catalog via src/lib/tool-copy.ts, not from here.
-   */
   toolPage: {
-    notFoundTitle: string;
-    backToTools: string;
     breadcrumbTools: string;
-    goPro: string;
-    badgeFree: string;
     badgePro: string;
-    /** The free note renders as pre + linked goPro text + post. */
-    freeNotePre: string;
-    freeNoteLink: string;
-    freeNotePost: string;
-    proFeature: string;
+    /** Carries {name}. */
+    run: string;
+    /** Carries {name}. */
+    description: string;
+    limitsTitle: string;
+    plan: string;
+    planFree: string;
+    planPro: string;
+    runsIn: string;
+    runsBrowser: string;
+    runsServer: string;
+    fileSize: string;
+    fileSizeValue: string;
+    batch: string;
+    batchValue: string;
+    mergeValue: string;
+    pages: string;
+    pagesValue: string;
+    freeDaily: string;
+    freeDailyExports: string;
+    proDaily: string;
+    proDailyValue: string;
     proRequires: string;
-    /** Carries {price}. */
     proCta: string;
-    /** A catalog tool that is planned but cannot run yet. */
     comingSoonBadge: string;
     comingSoonTitle: string;
     comingSoonBody: string;
-    /** A catalog tool that is switched off on purpose for now. */
     suspendedBadge: string;
     suspendedTitle: string;
     suspendedBody: string;
+    /** Carries {category}. */
+    related: string;
   };
   pricing: {
     metaTitle: string;
-    /** Carries {price}. */
     metaDescription: string;
-    flashCanceled: string;
-    flashCardUnavailable: string;
-    flashCryptoUnavailable: string;
-    flashError: string;
-    eyebrow: string;
-    /** One line per rule; rendered with <br> between them. */
-    title: string[];
+    title: Accented;
     lead: string;
-    monthly: string;
-    yearly: string;
-    /** Carries {pct}. */
     saveAnnual: string;
-    switchYearly: string;
-    freeBadge: string;
     freeHeading: string;
     freeTagline: string;
-    /** Carry {free}, {exports}, {mb}: see PRICING_FACTS. */
     freeFeatures: string[];
     browseTools: string;
-    mostPopular: string;
-    proBadge: string;
     proHeading: string;
-    perMonthYearly: string;
-    perMonthMonthly: string;
-    /** Carry {batch}: see PRICING_FACTS. Only claims the code backs. */
+    proTagline: string;
+    perMonth: string;
+    perYear: string;
     proFeatures: string[];
-    /** The paid checkout button. Pay charges the first period immediately. */
     subscribe: string;
-    payCrypto: string;
+    subscribeYearly: string;
+    payNote: string;
     faqTitle: string;
-    /** Answers may carry {days}, the refund window. */
     faq: { q: string; a: string }[];
   };
-  signIn: {
-    /** Carries {count}. */
-    eyebrow: string;
-    /** Three lines; the last one is rendered in gold. */
-    title: string[];
-    heroLead: string;
-    formTitle: string;
-    formLead: string;
-    cta: string;
-    ctaBusy: string;
-    errorFallback: string;
-    footnote: string;
-  };
   notFound: {
-    /** document.title of the 404, already carrying the brand. */
     metaTitle: string;
-    /** Carries {code}. */
     eyebrow: string;
-    /** Two lines; the second one is rendered in color. */
-    title: string[];
+    title: Accented;
     lead: string;
     backHome: string;
     readDocs: string;
   };
+  error: {
+    title: string;
+    lead: string;
+    retry: string;
+    backHome: string;
+  };
   docs: {
     metaTitle: string;
     metaDescription: string;
-    eyebrow: string;
-    /** Three lines; the middle one is rendered in color. */
-    title: string[];
+    title: Accented;
     lead: string;
-    /**
-     * The three entry-point cards. The api body carries a literal `{name}`
-     * placeholder on purpose — it names the URL segment, not a fill token —
-     * so card bodies are rendered without fill().
-     */
-    cards: {
-      web: { eyebrow: string; title: string; body: string };
-      api: { eyebrow: string; title: string; body: string };
-      mcp: { eyebrow: string; title: string; body: string };
+    paths: {
+      web: { title: string; body: string; cta: string };
+      api: { title: string; body: string; cta: string };
+      mcp: { title: string; body: string; cta: string };
     };
-    open: string;
     referenceTitle: string;
     reference: {
-      auth: { title: string; items: { name: string; desc: string }[] };
-      /** Item descs may carry {count} and {status}. */
-      tools: { title: string; items: { name: string; desc: string }[] };
-      /** Item names/descs may carry {limit} and {xpay}. */
-      limits: { title: string; items: { name: string; desc: string }[] };
+      auth: { title: string; items: Item[] };
+      tools: { title: string; items: Item[] };
+      limits: { title: string; items: Item[] };
     };
     sampleTitle: string;
+    sampleLead: string;
+  };
+  status: {
+    metaTitle: string;
+    metaDescription: string;
+    title: Accented;
+    lead: string;
+    checking: string;
+    overallOk: string;
+    overallDegraded: string;
+    overallDown: string;
+    errorTitle: string;
+    errorBody: string;
+    emptyTitle: string;
+    emptyBody: string;
+    retry: string;
+    /** Carries {time}. */
+    checkedAt: string;
+    service: string;
+    state: string;
+    latency: string;
+    stateOk: string;
+    stateDegraded: string;
+    stateDown: string;
+    names: { api: string; postgres: string; redis: string; storage: string };
   };
   blog: {
     metaTitle: string;
     metaDescription: string;
-    /** Both carry {count}. */
     postCount: string;
     postCountOne: string;
-    title: string;
+    title: Accented;
     lead: string;
-    /** Display labels only — post data keeps its English category values. */
+    filterLabel: string;
     categories: { all: string; engineering: string; design: string; product: string; changelog: string };
-    featured: string;
-    /** Both carry {min}. */
     minRead: string;
-    minShort: string;
     emptyCategory: string;
+    /** Shown above a post that has no version in this language. Empty in English. */
+    englishNote: string;
     newsletter: {
       title: string;
       lead: string;
+      emailLabel: string;
       emailPlaceholder: string;
       subscribe: string;
       subscribed: string;
@@ -243,40 +233,30 @@ export interface Dictionary {
     };
     post: {
       notFoundTitle: string;
-      authorBio: string;
+      back: string;
       keepReading: string;
       share: string;
       copied: string;
     };
   };
-  /**
-   * Metadata for the pages whose BODY is still English only (privacy, terms,
-   * status). The title and description follow the URL's language; the body is
-   * marked lang="en" and introduced by `englishOnly` when the page is not.
-   */
   legal: {
     privacyTitle: string;
     privacyDescription: string;
     termsTitle: string;
     termsDescription: string;
-    statusTitle: string;
-    statusDescription: string;
-    /** Empty in English: there is nothing to explain. */
-    englishOnly: string;
+    contents: string;
+    /** Carries {date}. */
+    effective: string;
   };
   footer: {
-    blog: string;
-    docs: string;
+    tagline: string;
+    productHead: string;
+    aboutHead: string;
     api: string;
-    pricing: string;
+    status: string;
     privacy: string;
     terms: string;
-    status: string;
     productBy: string;
-    tagline: string;
-    colProduct: string;
-    colResources: string;
-    colLegal: string;
     rights: string;
   };
 }
@@ -285,270 +265,271 @@ const en: Dictionary = {
   htmlLang: "en",
   ogLocale: "en_US",
   meta: {
-    title: "Toolips · Everyday tools for files, text and the web",
+    title: "Toolips · Small tools for files, text and the web",
     description:
       "{count} small tools in one place: merge a PDF, resize an image, format JSON, check a domain. Most are free and work without an account.",
   },
   nav: {
     tools: "Tools",
     pricing: "Pricing",
-    api: "API",
     docs: "Docs",
     blog: "Blog",
-    goPro: "Go Pro",
-    goProAria: "Go Pro",
+    goPro: "Get Pro",
     signIn: "Sign in",
-    accountAria: "Account · {email}",
     openMenu: "Open menu",
+    closeMenu: "Close menu",
     skipToContent: "Skip to content",
     otherLanguage: "ID",
     otherLanguageAria: "Baca dalam Bahasa Indonesia",
+    themeToDark: "Switch to dark theme",
+    themeToLight: "Switch to light theme",
   },
   hero: {
-    eyebrow: "{free} free tools · {pro} on Pro · most work without an account",
-    title: ["Small tools for ", "everyday", " internet tasks."],
-    lead: "Merge a PDF, resize an image, format JSON or check a domain's TLS. {count} tools in one place, most of them free.",
-    searchPlaceholder: "Search {count} tools…",
-    searchAria: "Search tools (⌘K)",
-    browse: "Browse tools",
+    proof: "{free} free tools and {pro} on Pro. Most run without an account.",
+    title: ["Small tools for ", "everyday", " file, text and web jobs."],
+    lead: "Merge a PDF, resize an image, format JSON or check a domain's certificate. {count} tools you can use in the browser, call over REST or hand to an AI agent.",
+    searchPlaceholder: "Search {count} tools",
+    searchLabel: "Search the tools",
+    find: "Find a tool",
   },
   grid: {
-    title: ["Every tool, ", "one", " place."],
+    title: ["Every tool, ", "one", " list."],
     lede: "Filter by category or search by name. Free tools have a daily limit; Pro tools need a subscription.",
     resultCount: "{count} tools",
-    emptyTitle: "No matches.",
-    emptyBody: "Try a broader search or pick a different category.",
+    emptyTitle: "No tool in this category matches.",
+    emptyBody: "Try a shorter search, or pick another category.",
     emptyFor: "No tool matches “{query}”.",
-    clearSearch: "Clear search",
+    clearSearch: "Clear the search",
   },
   ways: {
-    title: ["The same tools, ", "three", " ways."],
-    lede: "Use them in the browser, call them over REST, or mount them in an MCP-aware agent. Auth and quotas are shared.",
-    web: { title: "In the browser", body: "Open a tool and run it. Most tools need no account.", cta: "Browse tools" },
-    api: { title: "REST API", body: "POST JSON to the same handlers the web app uses, with your API key.", cta: "Get an API key" },
-    mcp: { title: "MCP server", body: "Mount the toolset in Claude, Cursor or any agent that speaks MCP.", cta: "Read the docs" },
+    title: ["The same tools, ", "three", " ways in."],
+    lede: "Each tool runs on one handler. The web page, the REST API and the MCP server all call it, with the same sign-in and the same quota.",
+    web: { title: "In the browser", body: "Open a tool and run it. Most tools need no account.", cta: "Search the tools" },
+    api: { title: "Over REST", body: "POST JSON to the handler the web page uses, with your API key.", cta: "Create an API key" },
+    mcp: { title: "From an AI agent", body: "Add the MCP server to Claude, Cursor or any agent that speaks MCP.", cta: "Read the MCP setup" },
   },
   upgrade: {
-    title: "Need more than {limit} exports a day?",
-    body: "Pro removes the daily caps and adds AI tools and batch processing.",
-    cta: "See Pro · ${price}/mo",
+    title: "Need more than {limit} file runs a day?",
+    body: "Pro removes the daily caps and adds the AI tools and batch processing.",
+    cta: "See Pro for ${price} a month",
   },
-  accountDeleted:
-    "Your account was deleted. Sorry to see you go. You're always welcome back.",
+  accountDeleted: "Your account was deleted. You are welcome back any time.",
   toolPage: {
-    notFoundTitle: "Tool not found · Toolips",
-    backToTools: "Back to Tools",
     breadcrumbTools: "Tools",
-    goPro: "Go Pro",
-    badgeFree: "Free",
     badgePro: "Pro",
-    freeNotePre: "Free includes a daily run limit per tool category.",
-    freeNoteLink: "Go Pro",
-    freeNotePost: "for unlimited.",
-    proFeature: "Pro feature",
-    proRequires: "This tool requires a Pro subscription.",
-    proCta: "Go Pro · from ${price}/mo",
+    run: "Run {name}",
+    description: "{name} on Toolips: what it does, its limits, and where to run it.",
+    limitsTitle: "Limits",
+    plan: "Plan",
+    planFree: "Free",
+    planPro: "Pro subscription",
+    runsIn: "Runs in",
+    runsBrowser: "Your browser. The file stays on your device.",
+    runsServer: "Our server. The file is processed in memory and not kept.",
+    fileSize: "File size",
+    fileSizeValue: "Up to {mb} MB per file",
+    batch: "Files per run",
+    batchValue: "Up to {batch} images",
+    mergeValue: "Up to {merge} PDFs",
+    pages: "Pages",
+    pagesValue: "Up to {pages} pages per PDF",
+    freeDaily: "Free daily limit",
+    freeDailyExports: "{exports} file runs a day",
+    proDaily: "With Pro",
+    proDailyValue: "No daily cap. Per-minute rate limits still apply.",
+    proRequires: "This tool needs a Pro subscription.",
+    proCta: "See Pro for ${price} a month",
     comingSoonBadge: "Coming soon",
     comingSoonTitle: "Not available yet",
-    comingSoonBody: "This tool is on the way but does not run yet. Every other tool in the catalog works today.",
+    comingSoonBody: "This tool is on the way but does not run yet. Every other tool in the list works today.",
     suspendedBadge: "Paused",
-    suspendedTitle: "Temporarily unavailable",
-    suspendedBody: "Downloaders are paused for now. Every other tool in the catalog works today.",
+    suspendedTitle: "Paused for now",
+    suspendedBody: "Downloaders are paused for now. Every other tool in the list works today.",
+    related: "More {category} tools",
   },
   pricing: {
     metaTitle: "Pricing · Toolips",
     metaDescription:
-      "Free for everyone. Pro unlocks AI tools and batch processing, and lifts the daily caps, from ${price}/mo.",
-    flashCanceled: "Checkout canceled. No charge was made.",
-    flashCardUnavailable: "Card payments aren't available right now. Try crypto, or check back shortly.",
-    flashCryptoUnavailable: "Crypto checkout isn't available right now. Try paying by card.",
-    flashError: "Something went wrong starting checkout. Please try again.",
-    eyebrow: "Free, forever · Pro for power moves",
-    title: ["One price.", "No nonsense."],
-    lead: "Toolips is free for everyone. Pro unlocks AI tools and batch processing, and lifts the daily caps, all for less than a coffee.",
-    monthly: "Monthly",
-    yearly: "Yearly",
-    saveAnnual: "Save {pct}% on annual",
-    switchYearly: "Switch to yearly any time",
-    freeBadge: "Free",
-    freeHeading: "Forever free.",
-    freeTagline: "No card. No signup.",
-    freeFeatures: [
-      "{free} free tools",
-      "{exports} PDF/image exports per day",
-      "Files up to {mb} MB each",
-    ],
-    browseTools: "Browse tools",
-    mostPopular: "Most popular",
-    proBadge: "Pro",
-    proHeading: "Power move.",
-    perMonthYearly: "per month · billed yearly",
-    perMonthMonthly: "per month · billed monthly",
+      "Free for everyone. Pro adds the AI tools and batch processing and lifts the daily caps, for ${price} a month.",
+    title: ["Free to use. ", "Pro", " when you need more."],
+    lead: "Every free tool works without a card or an account. Pro adds the AI tools and batch processing and lifts the daily caps.",
+    saveAnnual: "Save {pct}% with yearly billing",
+    freeHeading: "Free",
+    freeTagline: "No card, no sign-up.",
+    freeFeatures: ["{free} free tools", "{exports} PDF and image runs a day", "Files up to {mb} MB each"],
+    browseTools: "Browse the free tools",
+    proHeading: "Pro",
+    proTagline: "For daily work, scripts and agents.",
+    perMonth: "a month, billed monthly",
+    perYear: "a year, billed yearly",
     proFeatures: [
       "Everything in Free",
-      "Unlimited exports",
+      "No daily cap on file runs",
       "Batch resize up to {batch} images at once",
-      "AI tools (Paraphraser, Hooks, …)",
+      "The AI tools: paraphraser, hooks, captions and more",
       "REST API and MCP with no daily cap",
     ],
-    subscribe: "Get Pro",
-    payCrypto: "Pay with crypto",
-    faqTitle: "Common questions",
+    subscribe: "Upgrade to Pro monthly",
+    subscribeYearly: "Upgrade to Pro yearly",
+    payNote:
+      "Checkout runs on Efolusi Pay. Pay with local methods through Mayar, or with crypto through NOWPayments.",
+    faqTitle: "Questions about Pro",
     faq: [
       {
         q: "Can I cancel any time?",
-        a: "Yep. Cancel from your account in two clicks. You keep Pro until the billing period ends.",
+        a: "Yes. Cancel from your account. You keep Pro until the paid period ends.",
       },
       {
         q: "Is there a refund policy?",
-        a: "Full refund within {days} days, no questions asked. After {days} days we prorate the unused time if you cancel. Just email hello@toolips.xyz.",
+        a: "Full refund within {days} days, no questions asked. After {days} days we refund the unused time if you cancel. Email hello@toolips.xyz.",
       },
       {
-        q: "Do team plans exist?",
-        a: "Team billing (centralized seats, shared workspace) and SSO are on the roadmap, but not available yet. Email team@toolips.xyz to join the waiting list.",
+        q: "Are there team plans?",
+        a: "Not yet. Shared seats and SSO for teams are planned. Email team@toolips.xyz to hear when they open.",
       },
     ],
   },
-  signIn: {
-    eyebrow: "{count} tools · zero installs",
-    title: ["Pick up", "where you", "left off."],
-    heroLead:
-      "Sign in for your API key, billing, and saved account settings. Toolips works without an account too, so it's your call.",
-    formTitle: "Welcome back.",
-    formLead:
-      "Toolips uses your Efolusi account. One sign-in for every Efolusi product, with no separate password to remember here.",
-    cta: "Continue with Efolusi",
-    ctaBusy: "Taking you to Efolusi…",
-    errorFallback: "Could not reach Efolusi sign-in.",
-    footnote:
-      "No account yet? Continuing creates one. Most tools work without signing in at all. An account is for your API key, billing and saved settings.",
-  },
   notFound: {
     metaTitle: "Page not found · Toolips",
-    eyebrow: "{code} · not found",
+    eyebrow: "Error {code}",
     title: ["This page ", "isn't", " here."],
-    lead: "It may have moved, or it never existed. The tools are all still on the home page.",
-    backHome: "Back to tools",
+    lead: "It may have moved, or it never existed. Every tool is still on the home page.",
+    backHome: "Back to the tools",
     readDocs: "Read the docs",
+  },
+  error: {
+    title: "This page failed to load.",
+    lead: "Something broke on our side while building this page. Try again, or go back to the tools.",
+    retry: "Load the page again",
+    backHome: "Back to the tools",
   },
   docs: {
     metaTitle: "Docs · Toolips",
-    metaDescription: "Use Toolips from the browser, the REST API, or any MCP-compatible AI agent.",
-    eyebrow: "Documentation",
-    title: ["Docs.", "One page.", "No fluff."],
-    lead: "Toolips runs the same tools three ways: a web app, a REST API, and an MCP server. Use whichever fits your workflow; they share auth, quotas, and output shapes.",
-    cards: {
+    metaDescription: "Use Toolips from the browser, the REST API, or any AI agent that speaks MCP.",
+    title: ["Run Toolips from the ", "browser", ", REST or MCP."],
+    lead: "The three paths call the same tool handlers. They share sign-in, quotas and the shape of the output, so a tool behaves the same wherever you call it.",
+    paths: {
       web: {
-        eyebrow: "Start here",
-        title: "Quickstart",
-        body: "Run your first tool from the web. Two minutes, no signup.",
+        title: "Browser",
+        body: "Open a tool, drop in a file or some text, and run it. Most tools need no account.",
+        cta: "Search the tools",
       },
       api: {
-        eyebrow: "Endpoints",
         title: "REST API",
-        body: "POST /api/tools/{name} with JSON. Same surface as the web UI.",
+        body: "POST /api/tools/{name} with a JSON body and your API key. The response is JSON.",
+        cta: "Create an API key",
       },
       mcp: {
-        eyebrow: "Protocol",
         title: "MCP server",
-        body: "Mount the toolset in Claude, Cursor, or any MCP-aware agent.",
+        body: "Add the server at /api/mcp to Claude, Cursor or another MCP client, with the same API key.",
+        cta: "Create an API key",
       },
     },
-    open: "Open",
     referenceTitle: "Reference",
     reference: {
       auth: {
         title: "Authentication",
         items: [
-          { name: "Cookie session", desc: "Browser flow using an Efolusi SSO session." },
-          { name: "API key", desc: "tlp_live_… header for the REST API." },
-          { name: "MCP token", desc: "Same key, scoped to tools:call." },
+          { name: "Cookie session", desc: "The browser signs in with your Efolusi account." },
+          { name: "API key", desc: "A tlp_live_… bearer token for the REST API." },
+          { name: "MCP token", desc: "The same key, scoped to tools:call." },
         ],
       },
       tools: {
         title: "Tools",
         items: [
-          { name: "Catalog", desc: "{count} tools across utility, security and AI." },
-          { name: "I/O shape", desc: "JSON in, JSON out. File tools return a signed URL." },
+          { name: "Catalog", desc: "{count} tools across files, text, code, security and AI." },
+          { name: "Input and output", desc: "JSON in, JSON out. File tools return a signed URL." },
           {
             name: "Errors",
-            desc: "JSON error bodies: { error } with the right HTTP status ({status} carries upgradeUrl when over quota).",
+            desc: "A JSON body { error } with the matching HTTP status. Status {status} carries upgradeUrl when you are over quota.",
           },
         ],
       },
       limits: {
         title: "Limits",
         items: [
-          { name: "Free tier", desc: "Free tools only. {limit} file exports / day per IP; text tools are not metered. Per-day calendar reset." },
-          { name: "Pro tier", desc: "No daily cap. Per-minute rate limits still apply." },
-          {
-            name: "{xpay}",
-            desc: "Optional pay-per-call in USDC (no account) when an {xpay} verifier is configured.",
-          },
+          { name: "Free", desc: "Free tools only. {limit} file runs a day per IP address; text tools are not metered. The count resets each calendar day." },
+          { name: "Pro", desc: "No daily cap. Per-minute rate limits still apply." },
+          { name: "{xpay}", desc: "Pay per call in USDC, without an account, where an {xpay} verifier is set up." },
         ],
       },
     },
     sampleTitle: "One request",
+    sampleLead: "Count the words in a sentence with the word counter.",
+  },
+  status: {
+    metaTitle: "Status · Toolips",
+    metaDescription: "Live status of the Toolips API and the services it depends on.",
+    title: ["Is Toolips ", "running", "?"],
+    lead: "This page asks the Toolips API for its health each time you open it.",
+    checking: "Asking the API for its health…",
+    overallOk: "Everything is running.",
+    overallDegraded: "Some parts are slow or failing.",
+    overallDown: "The API is down.",
+    errorTitle: "The status check did not answer.",
+    errorBody: "Either your connection dropped or the API is down. Check again in a minute.",
+    emptyTitle: "The API answered with no checks.",
+    emptyBody: "It is up, but it did not report on the database, cache or file storage.",
+    retry: "Check again",
+    checkedAt: "Checked at {time}",
+    service: "Service",
+    state: "State",
+    latency: "Response time",
+    stateOk: "Running",
+    stateDegraded: "Degraded",
+    stateDown: "Down",
+    names: { api: "API server", postgres: "Database", redis: "Cache", storage: "File storage" },
   },
   blog: {
     metaTitle: "Blog · Toolips",
-    metaDescription: "Field notes from building Toolips: design, engineering, product, changelog.",
+    metaDescription: "Notes from building Toolips: engineering, design, product and the changelog.",
     postCount: "{count} posts",
     postCountOne: "{count} post",
-    title: "Field notes.",
-    lead: "Notes from building Toolips: design, engineering, and the occasional ode to a well-shrunk PDF.",
-    categories: {
-      all: "All",
-      engineering: "Engineering",
-      design: "Design",
-      product: "Product",
-      changelog: "Changelog",
-    },
-    featured: "Featured",
+    title: ["Notes from ", "building", " Toolips."],
+    lead: "Engineering, design, product decisions and the changelog, written by the team.",
+    filterLabel: "Filter posts by category",
+    categories: { all: "All", engineering: "Engineering", design: "Design", product: "Product", changelog: "Changelog" },
     minRead: "{min} min read",
-    minShort: "{min} min",
     emptyCategory: "No posts in this category yet.",
+    englishNote: "",
     newsletter: {
-      title: "One email. Monthly.",
-      lead: "Field notes, changelog highlights, the occasional discount. Never more than once a month.",
-      emailPlaceholder: "you@email.com",
-      subscribe: "Subscribe",
+      title: "One email a month.",
+      lead: "New posts and changelog highlights. Never more than once a month.",
+      emailLabel: "Email address",
+      emailPlaceholder: "you@example.com",
+      subscribe: "Subscribe to the newsletter",
       subscribed: "You're on the list. See you next month.",
       invalid: "Enter a valid email address.",
       ratelimited: "Too many attempts. Try again in a minute.",
       toolarge: "That request was too large. Try again.",
-      error: "We couldn't save that signup. Please try again.",
+      error: "We couldn't save that sign-up. Try again.",
     },
     post: {
       notFoundTitle: "Post not found · Toolips",
-      authorBio: "Writes about utility software and the people who make it.",
+      back: "All posts",
       keepReading: "Keep reading",
-      share: "Share",
-      copied: "Copied",
+      share: "Copy link",
+      copied: "Link copied",
     },
   },
   legal: {
     privacyTitle: "Privacy Policy",
-    privacyDescription: "How Toolips handles your data. Short and honest.",
+    privacyDescription: "How Toolips handles your data.",
     termsTitle: "Terms of Service",
-    termsDescription: "The terms you agree to when using Toolips.",
-    statusTitle: "Status",
-    statusDescription: "Real-time service status for Toolips.",
-    englishOnly: "",
+    termsDescription: "The terms you agree to when you use Toolips.",
+    contents: "Contents",
+    effective: "Effective {date}.",
   },
   footer: {
-    blog: "Blog",
-    docs: "Docs",
-    api: "API",
-    pricing: "Pricing",
+    tagline: "Small tools for files, text and the web, in one place.",
+    productHead: "Toolips",
+    aboutHead: "Legal and status",
+    api: "API keys",
+    status: "Status",
     privacy: "Privacy",
     terms: "Terms",
-    status: "Status",
     productBy: "A product by",
-    tagline: "Everyday tools for files, text and the web, in one place.",
-    colProduct: "Product",
-    colResources: "Resources",
-    colLegal: "Legal",
     rights: "All rights reserved.",
   },
 };
@@ -557,270 +538,271 @@ const id: Dictionary = {
   htmlLang: "id",
   ogLocale: "id_ID",
   meta: {
-    title: "Toolips · Alat sehari-hari untuk file, teks, dan web",
+    title: "Toolips · Alat kecil untuk file, teks, dan web",
     description:
       "{count} alat kecil di satu tempat: gabungkan PDF, ubah ukuran gambar, rapikan JSON, periksa domain. Sebagian besar gratis dan bisa dipakai tanpa akun.",
   },
   nav: {
     tools: "Alat",
     pricing: "Harga",
-    api: "API",
     docs: "Dokumen",
     blog: "Blog",
     goPro: "Ambil Pro",
-    goProAria: "Ambil paket Pro",
     signIn: "Masuk",
-    accountAria: "Akun · {email}",
     openMenu: "Buka menu",
+    closeMenu: "Tutup menu",
     skipToContent: "Lewati ke konten",
     otherLanguage: "EN",
     otherLanguageAria: "Read in English",
+    themeToDark: "Ganti ke tema gelap",
+    themeToLight: "Ganti ke tema terang",
   },
   hero: {
-    eyebrow: "{free} alat gratis · {pro} di Pro · sebagian besar tanpa akun",
-    title: ["Alat kecil untuk urusan internet ", "sehari-hari", "."],
-    lead: "Gabungkan PDF, ubah ukuran gambar, rapikan JSON, atau periksa TLS sebuah domain. {count} alat di satu tempat, sebagian besar gratis.",
-    searchPlaceholder: "Cari {count} alat…",
-    searchAria: "Cari alat (⌘K)",
-    browse: "Jelajahi alat",
+    proof: "{free} alat gratis dan {pro} di Pro. Sebagian besar jalan tanpa akun.",
+    title: ["Alat kecil untuk urusan ", "harian", " file, teks, dan web."],
+    lead: "Gabungkan PDF, ubah ukuran gambar, rapikan JSON, atau periksa sertifikat domain. {count} alat yang bisa kamu pakai di browser, panggil lewat REST, atau serahkan ke agen AI.",
+    searchPlaceholder: "Cari di {count} alat",
+    searchLabel: "Cari alat",
+    find: "Temukan alat",
   },
   grid: {
-    title: ["Semua alat, ", "satu", " tempat."],
-    lede: "Saring per kategori atau cari berdasarkan nama. Alat gratis punya batas harian; alat Pro memerlukan langganan.",
+    title: ["Semua alat, ", "satu", " daftar."],
+    lede: "Saring per kategori atau cari berdasarkan nama. Alat gratis punya batas harian; alat Pro perlu langganan.",
     resultCount: "{count} alat",
-    emptyTitle: "Tidak ada yang cocok.",
-    emptyBody: "Coba kata kunci yang lebih luas, atau pilih kategori lain.",
+    emptyTitle: "Tidak ada alat yang cocok di kategori ini.",
+    emptyBody: "Coba kata kunci yang lebih pendek, atau pilih kategori lain.",
     emptyFor: "Tidak ada alat yang cocok dengan “{query}”.",
-    clearSearch: "Bersihkan pencarian",
+    clearSearch: "Hapus pencarian",
   },
   ways: {
-    title: ["Alat yang sama, ", "tiga", " cara."],
-    lede: "Pakai di browser, panggil lewat REST, atau pasang di agen yang mendukung MCP. Autentikasi dan kuotanya sama.",
-    web: { title: "Di browser", body: "Buka alat lalu jalankan. Sebagian besar alat tidak perlu akun.", cta: "Jelajahi alat" },
-    api: { title: "REST API", body: "Kirim JSON ke handler yang sama dengan aplikasi web, memakai kunci API Anda.", cta: "Buat kunci API" },
-    mcp: { title: "Server MCP", body: "Pasang toolset ini di Claude, Cursor, atau agen lain yang mendukung MCP.", cta: "Baca dokumen" },
+    title: ["Alat yang sama, ", "tiga", " jalan masuk."],
+    lede: "Tiap alat jalan di satu handler. Halaman web, REST API, dan server MCP memanggilnya dengan akun dan kuota yang sama.",
+    web: { title: "Di browser", body: "Buka alat lalu jalankan. Sebagian besar alat tidak perlu akun.", cta: "Cari alat" },
+    api: { title: "Lewat REST", body: "Kirim JSON ke handler yang dipakai halaman web, dengan kunci API kamu.", cta: "Buat kunci API" },
+    mcp: { title: "Dari agen AI", body: "Tambahkan server MCP ke Claude, Cursor, atau agen lain yang mendukung MCP.", cta: "Baca cara pasang MCP" },
   },
   upgrade: {
-    title: "Butuh lebih dari {limit} ekspor sehari?",
-    body: "Pro menghapus batas harian dan menambah alat AI serta pemrosesan batch.",
-    cta: "Lihat Pro · ${price}/bln",
+    title: "Butuh lebih dari {limit} proses file sehari?",
+    body: "Pro menghapus batas harian dan menambah alat AI serta pemrosesan massal.",
+    cta: "Lihat Pro, ${price} sebulan",
   },
-  accountDeleted:
-    "Akun Anda sudah dihapus. Sayang sekali harus berpisah. Anda selalu boleh kembali.",
+  accountDeleted: "Akun kamu sudah dihapus. Kamu boleh kembali kapan saja.",
   toolPage: {
-    notFoundTitle: "Alat tidak ditemukan · Toolips",
-    backToTools: "Kembali ke Alat",
     breadcrumbTools: "Alat",
-    goPro: "Ambil Pro",
-    badgeFree: "Gratis",
     badgePro: "Pro",
-    freeNotePre: "Gratis punya batas pemakaian harian per kategori alat.",
-    freeNoteLink: "Ambil Pro",
-    freeNotePost: "untuk tanpa batas.",
-    proFeature: "Fitur Pro",
-    proRequires: "Alat ini membutuhkan langganan Pro.",
-    proCta: "Ambil Pro · mulai ${price}/bln",
+    run: "Jalankan {name}",
+    description: "{name} di Toolips: fungsinya, batasnya, dan tempat menjalankannya.",
+    limitsTitle: "Batas",
+    plan: "Paket",
+    planFree: "Gratis",
+    planPro: "Langganan Pro",
+    runsIn: "Berjalan di",
+    runsBrowser: "Browser kamu. File tetap di perangkatmu.",
+    runsServer: "Server kami. File diproses di memori dan tidak disimpan.",
+    fileSize: "Ukuran file",
+    fileSizeValue: "Sampai {mb} MB per file",
+    batch: "File per proses",
+    batchValue: "Sampai {batch} gambar",
+    mergeValue: "Sampai {merge} PDF",
+    pages: "Halaman",
+    pagesValue: "Sampai {pages} halaman per PDF",
+    freeDaily: "Batas harian gratis",
+    freeDailyExports: "{exports} proses file sehari",
+    proDaily: "Dengan Pro",
+    proDailyValue: "Tanpa batas harian. Batas per menit tetap berlaku.",
+    proRequires: "Alat ini perlu langganan Pro.",
+    proCta: "Lihat Pro, ${price} sebulan",
     comingSoonBadge: "Segera hadir",
     comingSoonTitle: "Belum tersedia",
-    comingSoonBody: "Alat ini sedang disiapkan dan belum bisa dijalankan. Semua alat lain di katalog sudah bisa dipakai hari ini.",
+    comingSoonBody: "Alat ini sedang disiapkan dan belum bisa dijalankan. Semua alat lain di daftar sudah bisa dipakai hari ini.",
     suspendedBadge: "Dijeda",
-    suspendedTitle: "Sementara tidak tersedia",
-    suspendedBody: "Alat pengunduh sedang dijeda untuk saat ini. Semua alat lain di katalog tetap bisa dipakai hari ini.",
+    suspendedTitle: "Dijeda untuk sementara",
+    suspendedBody: "Alat pengunduh sedang dijeda. Semua alat lain di daftar tetap bisa dipakai hari ini.",
+    related: "Alat {category} lainnya",
   },
   pricing: {
     metaTitle: "Harga · Toolips",
     metaDescription:
-      "Gratis untuk semua. Pro membuka alat AI dan pemrosesan batch, serta menghapus batas harian, mulai ${price}/bln.",
-    flashCanceled: "Checkout dibatalkan. Tidak ada tagihan yang dibuat.",
-    flashCardUnavailable: "Pembayaran kartu sedang tidak tersedia. Coba kripto, atau cek lagi sebentar lagi.",
-    flashCryptoUnavailable: "Checkout kripto sedang tidak tersedia. Coba bayar pakai kartu.",
-    flashError: "Ada yang salah saat memulai checkout. Silakan coba lagi.",
-    eyebrow: "Gratis, selamanya · Pro buat yang serius",
-    title: ["Satu harga.", "Tanpa ribet."],
-    lead: "Toolips gratis untuk semua. Pro membuka alat AI dan pemrosesan batch, serta menghapus batas harian, semuanya lebih murah dari secangkir kopi.",
-    monthly: "Bulanan",
-    yearly: "Tahunan",
-    saveAnnual: "Hemat {pct}% dengan paket tahunan",
-    switchYearly: "Bisa pindah ke tahunan kapan saja",
-    freeBadge: "Gratis",
-    freeHeading: "Gratis selamanya.",
-    freeTagline: "Tanpa kartu. Tanpa daftar.",
-    freeFeatures: [
-      "{free} alat gratis",
-      "{exports} ekspor PDF/gambar per hari",
-      "File sampai {mb} MB per file",
-    ],
-    browseTools: "Jelajahi alat",
-    mostPopular: "Paling laris",
-    proBadge: "Pro",
-    proHeading: "Naik kelas.",
-    perMonthYearly: "per bulan (USD) · ditagih tahunan",
-    perMonthMonthly: "per bulan (USD) · ditagih bulanan",
+      "Gratis untuk semua. Pro menambah alat AI dan pemrosesan massal serta menghapus batas harian, ${price} sebulan.",
+    title: ["Gratis dipakai. ", "Pro", " saat kamu butuh lebih."],
+    lead: "Semua alat gratis bisa dipakai tanpa kartu atau akun. Pro menambah alat AI dan pemrosesan massal serta menghapus batas harian.",
+    saveAnnual: "Hemat {pct}% dengan tagihan tahunan",
+    freeHeading: "Gratis",
+    freeTagline: "Tanpa kartu, tanpa daftar.",
+    freeFeatures: ["{free} alat gratis", "{exports} proses PDF dan gambar sehari", "File sampai {mb} MB per file"],
+    browseTools: "Lihat alat gratis",
+    proHeading: "Pro",
+    proTagline: "Untuk kerja harian, skrip, dan agen.",
+    perMonth: "sebulan, ditagih bulanan",
+    perYear: "setahun, ditagih tahunan",
     proFeatures: [
       "Semua yang ada di Gratis",
-      "Ekspor tanpa batas",
+      "Proses file tanpa batas harian",
       "Ubah ukuran sampai {batch} gambar sekaligus",
-      "Alat AI (Paraphraser, Hooks, …)",
+      "Alat AI: parafrase, hook, caption, dan lainnya",
       "REST API dan MCP tanpa batas harian",
     ],
-    subscribe: "Ambil Pro",
-    payCrypto: "Bayar pakai kripto",
-    faqTitle: "Pertanyaan umum",
+    subscribe: "Ambil Pro bulanan",
+    subscribeYearly: "Ambil Pro tahunan",
+    payNote:
+      "Pembayaran lewat Efolusi Pay. Bayar dengan metode lokal lewat Mayar, atau dengan kripto lewat NOWPayments.",
+    faqTitle: "Pertanyaan soal Pro",
     faq: [
       {
-        q: "Bisa batal kapan saja?",
-        a: "Bisa. Batalkan dari akunmu dalam dua klik. Pro tetap aktif sampai periode tagihan berakhir.",
+        q: "Bisa berhenti kapan saja?",
+        a: "Bisa. Batalkan dari akun kamu. Pro tetap aktif sampai periode yang sudah dibayar habis.",
       },
       {
         q: "Ada kebijakan refund?",
-        a: "Refund penuh dalam {days} hari, tanpa banyak tanya. Lewat {days} hari, sisa waktu yang belum terpakai kami prorata kalau kamu batal. Cukup email hello@toolips.xyz.",
+        a: "Refund penuh dalam {days} hari, tanpa pertanyaan. Lewat {days} hari, sisa waktu yang belum terpakai kami kembalikan kalau kamu berhenti. Email hello@toolips.xyz.",
       },
       {
         q: "Ada paket tim?",
-        a: "Tagihan tim (kursi terpusat, workspace bersama) dan SSO ada di roadmap, tapi belum tersedia. Email team@toolips.xyz untuk ikut waiting list.",
+        a: "Belum. Kursi bersama dan SSO untuk tim sedang direncanakan. Email team@toolips.xyz supaya kami kabari saat dibuka.",
       },
     ],
   },
-  signIn: {
-    eyebrow: "{count} alat · tanpa instal",
-    title: ["Lanjutkan", "dari titik", "terakhir."],
-    heroLead:
-      "Masuk untuk kunci API, tagihan, dan pengaturan akun yang tersimpan. Toolips juga jalan tanpa akun, jadi terserah kamu.",
-    formTitle: "Selamat datang kembali.",
-    formLead:
-      "Toolips memakai akun Efolusi kamu. Sekali masuk untuk semua produk Efolusi, tanpa password terpisah yang perlu diingat.",
-    cta: "Lanjutkan dengan Efolusi",
-    ctaBusy: "Mengantar kamu ke Efolusi…",
-    errorFallback: "Tidak bisa menghubungi halaman masuk Efolusi.",
-    footnote:
-      "Belum punya akun? Melanjutkan akan membuatkannya. Kebanyakan alat jalan tanpa perlu masuk sama sekali. Akun hanya untuk kunci API, tagihan, dan pengaturan tersimpan.",
-  },
   notFound: {
     metaTitle: "Halaman tidak ditemukan · Toolips",
-    eyebrow: "{code} · tidak ditemukan",
+    eyebrow: "Galat {code}",
     title: ["Halaman ini ", "tidak", " ada."],
     lead: "Mungkin sudah dipindah, atau memang tidak pernah ada. Semua alat masih ada di beranda.",
-    backHome: "Kembali ke alat",
+    backHome: "Kembali ke daftar alat",
     readDocs: "Baca dokumen",
+  },
+  error: {
+    title: "Halaman ini gagal dimuat.",
+    lead: "Ada yang rusak di sisi kami saat menyusun halaman ini. Coba lagi, atau kembali ke daftar alat.",
+    retry: "Muat ulang halaman",
+    backHome: "Kembali ke daftar alat",
   },
   docs: {
     metaTitle: "Dokumen · Toolips",
-    metaDescription: "Pakai Toolips dari browser, lewat REST API, atau dari agen AI mana pun yang mendukung MCP.",
-    eyebrow: "Dokumentasi",
-    title: ["Dokumen.", "Satu halaman.", "Tanpa basa-basi."],
-    lead: "Toolips menjalankan alat yang sama lewat tiga jalur: aplikasi web, REST API, dan server MCP. Pakai yang paling pas dengan alur kerjamu; ketiganya berbagi auth, kuota, dan bentuk keluaran.",
-    cards: {
+    metaDescription: "Pakai Toolips dari browser, lewat REST API, atau dari agen AI yang mendukung MCP.",
+    title: ["Jalankan Toolips dari ", "browser", ", REST, atau MCP."],
+    lead: "Ketiga jalur memanggil handler alat yang sama. Akun, kuota, dan bentuk keluarannya sama, jadi sebuah alat berperilaku sama dari mana pun kamu memanggilnya.",
+    paths: {
       web: {
-        eyebrow: "Mulai di sini",
-        title: "Mulai cepat",
-        body: "Jalankan alat pertamamu dari web. Dua menit, tanpa daftar.",
+        title: "Browser",
+        body: "Buka alat, masukkan file atau teks, lalu jalankan. Sebagian besar alat tidak perlu akun.",
+        cta: "Cari alat",
       },
       api: {
-        eyebrow: "Endpoint",
         title: "REST API",
-        body: "POST /api/tools/{name} dengan JSON. Permukaan yang sama dengan UI web.",
+        body: "POST /api/tools/{name} dengan body JSON dan kunci API kamu. Responsnya JSON.",
+        cta: "Buat kunci API",
       },
       mcp: {
-        eyebrow: "Protokol",
         title: "Server MCP",
-        body: "Pasang toolset ini di Claude, Cursor, atau agen mana pun yang paham MCP.",
+        body: "Tambahkan server di /api/mcp ke Claude, Cursor, atau klien MCP lain, dengan kunci API yang sama.",
+        cta: "Buat kunci API",
       },
     },
-    open: "Buka",
     referenceTitle: "Referensi",
     reference: {
       auth: {
         title: "Autentikasi",
         items: [
-          { name: "Sesi cookie", desc: "Alur browser dengan sesi SSO Efolusi." },
-          { name: "Kunci API", desc: "Header tlp_live_… untuk REST API." },
+          { name: "Sesi cookie", desc: "Browser masuk dengan akun Efolusi kamu." },
+          { name: "Kunci API", desc: "Token bearer tlp_live_… untuk REST API." },
           { name: "Token MCP", desc: "Kunci yang sama, dibatasi ke tools:call." },
         ],
       },
       tools: {
         title: "Alat",
         items: [
-          { name: "Katalog", desc: "{count} alat mencakup utilitas, keamanan, dan AI." },
-          { name: "Bentuk I/O", desc: "JSON masuk, JSON keluar. Alat file mengembalikan signed URL." },
+          { name: "Katalog", desc: "{count} alat untuk file, teks, kode, keamanan, dan AI." },
+          { name: "Masukan dan keluaran", desc: "JSON masuk, JSON keluar. Alat file mengembalikan signed URL." },
           {
-            name: "Error",
-            desc: "Body error JSON: { error } dengan status HTTP yang tepat ({status} membawa upgradeUrl saat kuota terlampaui).",
+            name: "Galat",
+            desc: "Body JSON { error } dengan status HTTP yang sesuai. Status {status} membawa upgradeUrl saat kuota habis.",
           },
         ],
       },
       limits: {
         title: "Batas",
         items: [
-          { name: "Tingkat gratis", desc: "Hanya alat gratis. {limit} ekspor file / hari per IP; alat teks tidak dibatasi. Reset per hari kalender." },
-          { name: "Tingkat Pro", desc: "Tanpa batas harian. Batas laju per menit tetap berlaku." },
-          {
-            name: "{xpay}",
-            desc: "Opsi bayar per panggilan dalam USDC (tanpa akun) bila verifier {xpay} sudah dikonfigurasi.",
-          },
+          { name: "Gratis", desc: "Hanya alat gratis. {limit} proses file sehari per alamat IP; alat teks tidak dihitung. Hitungan diulang tiap hari kalender." },
+          { name: "Pro", desc: "Tanpa batas harian. Batas per menit tetap berlaku." },
+          { name: "{xpay}", desc: "Bayar per panggilan dalam USDC, tanpa akun, bila verifier {xpay} sudah dipasang." },
         ],
       },
     },
     sampleTitle: "Satu permintaan",
+    sampleLead: "Hitung kata dalam satu kalimat dengan penghitung kata.",
+  },
+  status: {
+    metaTitle: "Status · Toolips",
+    metaDescription: "Status langsung API Toolips dan layanan yang dipakainya.",
+    title: ["Apakah Toolips ", "berjalan", "?"],
+    lead: "Halaman ini menanyakan kesehatan API Toolips setiap kali kamu membukanya.",
+    checking: "Menanyakan kesehatan API…",
+    overallOk: "Semua berjalan.",
+    overallDegraded: "Sebagian lambat atau gagal.",
+    overallDown: "API sedang mati.",
+    errorTitle: "Pemeriksaan status tidak menjawab.",
+    errorBody: "Koneksimu terputus atau API sedang mati. Periksa lagi semenit lagi.",
+    emptyTitle: "API menjawab tanpa hasil pemeriksaan.",
+    emptyBody: "API hidup, tapi tidak melaporkan database, cache, atau penyimpanan file.",
+    retry: "Periksa lagi",
+    checkedAt: "Diperiksa pukul {time}",
+    service: "Layanan",
+    state: "Keadaan",
+    latency: "Waktu respons",
+    stateOk: "Berjalan",
+    stateDegraded: "Terganggu",
+    stateDown: "Mati",
+    names: { api: "Server API", postgres: "Database", redis: "Cache", storage: "Penyimpanan file" },
   },
   blog: {
     metaTitle: "Blog · Toolips",
-    metaDescription: "Catatan lapangan dari membangun Toolips: desain, engineering, produk, changelog.",
+    metaDescription: "Catatan dari membangun Toolips: engineering, desain, produk, dan changelog.",
     postCount: "{count} tulisan",
     postCountOne: "{count} tulisan",
-    title: "Catatan lapangan.",
-    lead: "Catatan dari membangun Toolips: desain, engineering, dan sesekali puja-puji untuk PDF yang menyusut sempurna.",
-    categories: {
-      all: "Semua",
-      engineering: "Engineering",
-      design: "Desain",
-      product: "Produk",
-      changelog: "Changelog",
-    },
-    featured: "Unggulan",
+    title: ["Catatan dari ", "membangun", " Toolips."],
+    lead: "Engineering, desain, keputusan produk, dan changelog, ditulis oleh tim.",
+    filterLabel: "Saring tulisan per kategori",
+    categories: { all: "Semua", engineering: "Engineering", design: "Desain", product: "Produk", changelog: "Changelog" },
     minRead: "{min} mnt baca",
-    minShort: "{min} mnt",
     emptyCategory: "Belum ada tulisan di kategori ini.",
+    englishNote: "Tulisan ini dalam bahasa Inggris.",
     newsletter: {
-      title: "Satu email. Sebulan sekali.",
-      lead: "Catatan lapangan, sorotan changelog, sesekali diskon. Tidak pernah lebih dari sekali sebulan.",
-      emailPlaceholder: "kamu@email.com",
-      subscribe: "Langganan",
+      title: "Satu email sebulan.",
+      lead: "Tulisan baru dan sorotan changelog. Tidak pernah lebih dari sekali sebulan.",
+      emailLabel: "Alamat email",
+      emailPlaceholder: "kamu@example.com",
+      subscribe: "Langganan buletin",
       subscribed: "Kamu sudah masuk daftar. Sampai jumpa bulan depan.",
       invalid: "Masukkan alamat email yang valid.",
       ratelimited: "Terlalu banyak percobaan. Coba lagi semenit lagi.",
       toolarge: "Permintaan itu terlalu besar. Coba lagi.",
-      error: "Pendaftaran belum tersimpan. Silakan coba lagi.",
+      error: "Pendaftaran belum tersimpan. Coba lagi.",
     },
     post: {
       notFoundTitle: "Tulisan tidak ditemukan · Toolips",
-      authorBio: "Menulis tentang software utilitas dan orang-orang di baliknya.",
-      keepReading: "Lanjut membaca",
-      share: "Bagikan",
-      copied: "Tersalin",
+      back: "Semua tulisan",
+      keepReading: "Baca juga",
+      share: "Salin tautan",
+      copied: "Tautan tersalin",
     },
   },
   legal: {
     privacyTitle: "Kebijakan Privasi",
-    privacyDescription: "Cara Toolips menangani data Anda. Singkat dan jujur.",
+    privacyDescription: "Cara Toolips menangani data kamu.",
     termsTitle: "Ketentuan Layanan",
-    termsDescription: "Ketentuan yang Anda setujui saat memakai Toolips.",
-    statusTitle: "Status Layanan",
-    statusDescription: "Status layanan Toolips secara langsung.",
-    englishOnly: "Halaman ini untuk saat ini hanya tersedia dalam bahasa Inggris.",
+    termsDescription: "Ketentuan yang kamu setujui saat memakai Toolips.",
+    contents: "Isi",
+    effective: "Berlaku sejak {date}.",
   },
   footer: {
-    blog: "Blog",
-    docs: "Dokumen",
-    api: "API",
-    pricing: "Harga",
+    tagline: "Alat kecil untuk file, teks, dan web, di satu tempat.",
+    productHead: "Toolips",
+    aboutHead: "Legal dan status",
+    api: "Kunci API",
+    status: "Status",
     privacy: "Privasi",
     terms: "Ketentuan",
-    status: "Status",
     productBy: "Produk dari",
-    tagline: "Alat sehari-hari untuk file, teks, dan web, di satu tempat.",
-    colProduct: "Produk",
-    colResources: "Sumber",
-    colLegal: "Legal",
     rights: "Hak cipta dilindungi.",
   },
 };
@@ -833,13 +815,9 @@ export function dictionaryFor(value: string | undefined | null): Dictionary {
 }
 
 /**
- * The locale for a single-route page (/pricing, /sign-in, the 404), which has
- * no /en//id prefix to say which language it is in.
- *
- * Same order as the middleware's guess for "/": an explicit stored choice wins,
- * otherwise Cloudflare's edge-resolved country decides, otherwise English. Kept
- * as a pure function of the two inputs so server components can call it with
- * whatever request API they have (cookies()/headers()) and tests with strings.
+ * The locale for a render that never passed the middleware. Same order as the
+ * middleware's guess for "/": a stored choice wins, then Cloudflare's country,
+ * then English.
  */
 export function resolveLocale(
   cookieValue: string | undefined | null,

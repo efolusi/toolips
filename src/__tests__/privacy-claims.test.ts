@@ -3,10 +3,10 @@ import { fileURLToPath } from "node:url";
 import { FILE_TOOL_CAPABILITIES } from "~/lib/core/file-capabilities";
 import { describe, expect, it } from "vitest";
 
-// The privacy page used to say files never touch the server, while every
+// The privacy policy (src/lib/legal.ts) used to say files never touch the server, while every
 // server-multipart tool uploads to api.toolips.xyz. These checks tie the page
 // to the capability table so a new upload tool cannot ship unmentioned.
-const page = readFileSync(fileURLToPath(new URL("../app/privacy/page.tsx", import.meta.url)), "utf8")
+const page = readFileSync(fileURLToPath(new URL("../lib/legal.ts", import.meta.url)), "utf8")
   .replace(/\s+/g, " ");
 
 // How each tool is named in the "Image and PDF tools" paragraph.

@@ -8,7 +8,7 @@
 // a path no route matches, and the pages' own notFound() stays as a backstop.
 //
 // The known ids are read from the sources at build time: the catalog in
-// @toolips/tool-core and the markdown files in content/blog. The catalog is a
+// src/lib/core/catalog.ts and the markdown files in content/blog. The catalog is a
 // TypeScript file that next.config cannot import, so its ids are read as text;
 // src/__tests__/unknown-slug-rewrites.test.ts checks the result against TOOLS.
 
@@ -47,8 +47,9 @@ function unknownSegment(name, known) {
   return `:${name}((?!(?:${known.map(escape).join("|")})/?$)[^/]+)`;
 }
 
-export function unknownSlugRewrites({ slugs = blogSlugs() } = {}) {
+export function unknownSlugRewrites({ ids = catalogToolIds(), slugs = blogSlugs() } = {}) {
   const sections = [
+    ["tool", unknownSegment("id", ids)],
     ["blog", unknownSegment("slug", slugs)],
   ];
   return sections.flatMap(([section, segment]) => [

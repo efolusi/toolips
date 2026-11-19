@@ -1,6 +1,7 @@
 import { getAllPosts } from "~/lib/blog";
 import { SITE_URL } from "~/lib/api";
 import { LOCALES } from "~/lib/i18n";
+import { RUNNABLE_TOOLS } from "~/lib/tools";
 import { localizedPath } from "~/lib/locale-routing";
 import type { MetadataRoute } from "next";
 
@@ -27,15 +28,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = SITE_URL;
   const now = new Date();
 
-  const pages = ["/", "/pricing", "/docs", "/blog", "/privacy", "/terms"].flatMap((p) =>
+  const pages = ["/", "/pricing", "/docs", "/blog", "/status", "/privacy", "/terms"].flatMap((p) =>
     localized(base, p, now),
   );
   const posts = (await getAllPosts()).flatMap((p) =>
     localized(base, `/blog/${p.slug}`, p.date ? new Date(p.date) : now),
   );
 
-  return [
-    ...pages,
-    ...posts,
-  ];
+  // Runnable tools only: a paused or planned tool keeps its page but is not offered.
+  const tools = RUNNABLE_TOOLS.flatMap((t) => localized(base, `/tool/${t.id}`, now));
+
+  return [...pages, ...tools, ...posts];
 }
