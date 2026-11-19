@@ -183,12 +183,6 @@ export default async function PrivacyPage() {
               <strong>Resend</strong>: transactional email.{" "}
               <a href="https://resend.com/legal/privacy-policy">resend.com/privacy</a>
             </li>
-            <li>
-              <strong>Sentry</strong>: error monitoring for our server and, when enabled, for this
-              website in your browser. Reports are set up without IP addresses, cookies or request
-              bodies.{" "}
-              <a href="https://sentry.io/privacy/">sentry.io/privacy</a>
-            </li>
           </ul>
           <p>Some tools also contact other services on your behalf:</p>
           <ul>

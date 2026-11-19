@@ -49,11 +49,8 @@ export function buildCsp(opts: { nonce?: string; isProduction: boolean }): strin
     // Fonts are self-hosted via Meridian; data: covers inlined icon fonts.
     "font-src 'self' data:",
     "img-src 'self' data: blob:",
-    // jsdelivr + huggingface: the stt tool streams the Whisper model + ONNX
-    // runtime from these CDNs. Narrowing this to 'self' is tracked separately
-    // and blocked on self-hosting the model (PRD §9 Q2) — until then these are
-    // a data-fetch surface (connect-src only, no script execution).
-    `connect-src 'self'${api} https://*.sentry.io https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co`,
+    // The site calls nothing but its own origin and the API (pricing checkout).
+    `connect-src 'self'${api}`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
     `form-action 'self'${api}`,
