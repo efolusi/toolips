@@ -7,11 +7,11 @@ import type { ReactNode } from "react";
 import { SITE_URL } from "~/lib/api";
 import { DEFAULT_LOCALE, dictionaries, isLocale } from "~/lib/i18n";
 import { fill, TOOL_COUNT } from "~/lib/site-facts";
-import { SkipLink } from "~/components/SkipLink";
+import { SkipLink } from "@efolusi/meridian";
 
 const SITE_NAME = "Toolips";
-// The defaults are English because everything outside the two landing routes
-// still is. /en and /id override title, description and og:locale themselves.
+// English defaults. Every page sets its own title, description and alternates
+// in the request language.
 const TITLE = dictionaries.en.meta.title;
 const DESCRIPTION = fill(dictionaries.en.meta.description, { count: TOOL_COUNT });
 const BASE = new URL(SITE_URL);
@@ -71,12 +71,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     // suppressHydrationWarning: /theme-init.js sets data-theme on <html> before
     // hydration (FOUC prevention), so the server HTML (no data-theme) and the
     // client tree intentionally differ on this one element.
-    <html lang={lang} data-density="comfortable" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <Script src="/theme-init.js" strategy="beforeInteractive" nonce={nonce} />
       </head>
       <body>
-        <SkipLink label={dict.nav.skipToContent} />
+        <SkipLink href="#main">{dict.nav.skipToContent}</SkipLink>
         {children}
       </body>
     </html>

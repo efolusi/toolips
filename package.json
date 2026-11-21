@@ -13,7 +13,7 @@
     "test": "node scripts/bundle-blog.mjs && vitest run"
   },
   "dependencies": {
-    "@efolusi/meridian": "^1.21.7",
+    "@efolusi/meridian": "^1.25.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.469.0",
     "next": "15.5.24",

@@ -169,8 +169,7 @@ const CATEGORY_ORDER: Array<{ name: string; block: 1 | 2 | 3 | null }> = [
 ];
 
 function countByCategory(name: string): number {
-  // "All" keeps count 0 so the hub renders no badge on it (HubGrid shows a
-  // badge only when count > 0), matching the prior hand-maintained table.
+  // "All" keeps count 0: it is not a category. ToolFinder counts it itself.
   if (name === "All") return 0;
   return RUNNABLE_TOOLS.filter((t) => t.category === name).length;
 }

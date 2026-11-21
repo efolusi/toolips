@@ -34,7 +34,7 @@ describe("the terms quote the prices the pricing page shows", () => {
   });
 
   it("hardcodes no price or tool count in the terms page", async () => {
-    const terms = await source("app/terms/page.tsx");
+    const terms = await source("lib/legal.ts");
     expect(terms).not.toMatch(/\$\d/);
     expect(terms).not.toMatch(/\b83\b/);
     expect(terms).toMatch(/proPriceTerms\(/);

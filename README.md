@@ -1,14 +1,16 @@
 # Toolips site
 
-The website of Toolips: the home page with the tool list, pricing, docs, the blog, privacy and terms, in English and Indonesian.
+The website of Toolips: the home page with the tool list, a page per tool, pricing, docs, the blog, status, privacy and terms, in English and Indonesian.
 It is a Next.js site built with OpenNext and served by the Cloudflare Worker `toolips` (`wrangler.jsonc`).
 
 The tools themselves, sign-in and the account live in the Toolips app (`NEXT_PUBLIC_APP_URL`, default `https://toolips.xyz`).
-The pricing page posts checkout to the Toolips API (`NEXT_PUBLIC_API_URL`).
+The pricing page links to Efolusi Pay's checkout (`NEXT_PUBLIC_PAY_URL`, default `https://pay.efolusi.com`; the URL shape lives in `src/lib/pay.ts`).
+The status page and the newsletter form talk to the Toolips API (`NEXT_PUBLIC_API_URL`).
 
 - `src/app/`: the pages.
-- `content/blog/`: the posts. `scripts/bundle-blog.mjs` bundles them into the build, because the Worker has no file system.
+- `content/blog/`: the posts; `content/blog/id/` holds Indonesian versions of the short ones. `scripts/bundle-blog.mjs` bundles them into the build, because the Worker has no file system.
 - `src/lib/core/`: the tool catalog, plan limits, file limits and HTML escaping, copied from the Toolips tool-core package.
+- `src/app/globals.css`: the page layout only. Components and tokens come from `@efolusi/meridian`.
 
 ## Develop
 

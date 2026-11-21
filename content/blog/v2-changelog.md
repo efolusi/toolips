@@ -18,7 +18,7 @@ Toolips 2.0 is the rewrite we've been working on since January. Same product, ve
 - **TypeScript end-to-end.** Every tool handler is type-safe from form validation to DB write.
 - **Shared PostgreSQL + Valkey + private object storage.** Drizzle for the schema, BullMQ for jobs, and product-scoped MinIO for large files.
 - **Better Auth.** Session cookies for the web, API keys for the REST + MCP API. Same identity everywhere.
-- **Stripe billing.** Pro tier at $6/mo or $48/yr. Cancel from your account.
+- **Pro billing.** Pro tier at $6/mo or $48/yr. Checkout now runs through Efolusi Pay. Cancel from your account.
 - **Dark mode.** Auto-detects `prefers-color-scheme`. Override via the theme toggle.
 - **OG cards.** Every page renders an Open Graph image. Sharable links don't show as naked URLs anymore.
 
@@ -38,7 +38,6 @@ Toolips 2.0 is the rewrite we've been working on since January. Same product, ve
 ## What's coming in 2.1
 
 - **Webhooks** on every tool run (for Pro).
-- **Bring-your-own-Stripe-Connect** for resellers.
 - **Native macOS app** wrapping the web app. Same code, packaged.
 - **HTTP inspector refinements** for safer request debugging.
 

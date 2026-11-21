@@ -1,72 +1,44 @@
 "use client";
 
-// Route-level error boundary: catches uncaught render/server-component throws so
-// users get a branded screen (not Next's default) and stacks never reach the client.
-//
-// The full-page error uses Meridian's composable Empty primitives. An Alert is
-// intentionally omitted because this is already the page state; stacking both
-// would duplicate the message.
-import Link from "next/link";
-import { useEffect } from "react";
-import {
-  Button,
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  Icon,
-} from "@efolusi/meridian";
+// Route-level error boundary: a branded page instead of Next's default, with no
+// stack sent to the client. It renders inside the root layout, so <html lang>
+// already holds the request language; the copy follows it.
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+import { useEffect, useState } from "react";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle, Icon } from "@efolusi/meridian";
+import { dictionaryFor } from "~/lib/i18n";
+import { localizedPath } from "~/lib/locale-routing";
+
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const [lang, setLang] = useState("en");
   useEffect(() => {
+    setLang(document.documentElement.lang);
     console.error("[route-error]", error);
   }, [error]);
+  const d = dictionaryFor(lang);
+  const t = d.error;
 
   return (
-    <main
-      id="main"
-      tabIndex={-1}
-      style={{
-        minHeight: "60vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 32,
-      }}
-    >
+    <main id="main" tabIndex={-1} className="section wrap">
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <Icon name="triangle-alert" />
           </EmptyMedia>
-          <EmptyTitle>Something broke.</EmptyTitle>
+          <EmptyTitle>{t.title}</EmptyTitle>
           <EmptyDescription>
-            An unexpected error hit this page. It&apos;s been logged
-            {error?.digest ? ` (ref ${error.digest})` : ""}. You can retry or head back to the
-            tools.
+            {t.lead}
+            {error?.digest ? ` (${error.digest})` : ""}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <div style={{ display: "flex", gap: 10 }}>
-            <Button type="button" onClick={reset} variant="primary">
-              Try again
-            </Button>
-            {/* Anchor stays an anchor: meridian Button has no href (established FASE 1-3 pattern). */}
-            <Link
-              href="/"
-              className="tlp-btn tlp-btn--secondary"
-              style={{ textDecoration: "none" }}
-            >
-              Back to tools
-            </Link>
+          <div className="actions" style={{ marginTop: 0 }}>
+            <button type="button" onClick={reset} className="ef-btn ef-btn--primary ef-btn--md">
+              {t.retry}
+            </button>
+            <a href={localizedPath(d.htmlLang === "id" ? "id" : "en", "/")} className="ef-btn ef-btn--secondary ef-btn--md">
+              {t.backHome}
+            </a>
           </div>
         </EmptyContent>
       </Empty>

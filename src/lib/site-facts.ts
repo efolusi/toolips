@@ -45,10 +45,16 @@ export function annualBillingEnabled(
 }
 
 /**
- * The price sentence of the (English-only) terms. It names the yearly plan
- * only when the pricing page offers it.
+ * The price sentence of the terms, in either language. It names the yearly
+ * plan only when the pricing page offers it.
  */
-export function proPriceTerms(annualEnabled: boolean): string {
+export function proPriceTerms(annualEnabled: boolean, locale: "en" | "id" = "en"): string {
+  if (locale === "id") {
+    const perMonth = `Pro seharga $${PRO_MONTHLY_USD} per bulan`;
+    return annualEnabled
+      ? `${perMonth}, atau $${PRO_ANNUAL_USD} per tahun yang ditagih sekaligus (hemat sekitar ${ANNUAL_SAVINGS_PERCENT}%).`
+      : `${perMonth}.`;
+  }
   const monthly = `Pro is $${PRO_MONTHLY_USD}/month`;
   return annualEnabled
     ? `${monthly}, or $${PRO_ANNUAL_USD}/year billed annually (about ${ANNUAL_SAVINGS_PERCENT}% off).`

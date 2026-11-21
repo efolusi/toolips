@@ -1,46 +1,24 @@
-// Canonical Toolips product mark (wrench-in-hex). Single source of geometry
-// for every in-app render site; src/app/icon.svg carries the same path for
-// the favicon. Colour comes from CSS (--mark-ink) via currentColor.
+// Canonical Toolips product mark (wrench-in-hex). src/app/icon.svg carries the
+// same path for the favicon.
 // Tight bbox of BRAND_MARK_PATH: 658 wide x 708 tall (ratio R = 0.929).
 export const BRAND_MARK_VIEWBOX = "0 0 658 708";
 export const BRAND_MARK_RATIO = 658 / 708;
 export const BRAND_MARK_PATH =
   "M 324 0 L 323 1 L 312 2 L 297 8 L 271 24 L 248 36 L 215 56 L 208 59 L 201 64 L 194 67 L 187 72 L 126 106 L 90 128 L 30 162 L 23 167 L 13 177 L 9 183 L 3 196 L 0 212 L 0 516 L 3 531 L 9 544 L 13 550 L 29 565 L 116 614 L 126 621 L 159 639 L 221 676 L 229 680 L 236 680 L 239 676 L 239 507 L 236 495 L 226 478 L 198 453 L 188 442 L 174 423 L 165 407 L 154 379 L 150 363 L 149 349 L 148 348 L 148 316 L 149 315 L 150 302 L 152 297 L 153 289 L 161 266 L 170 248 L 185 226 L 206 204 L 221 192 L 237 182 L 259 172 L 279 166 L 289 164 L 298 164 L 302 168 L 303 174 L 266 289 L 266 298 L 268 307 L 273 319 L 280 330 L 291 342 L 302 350 L 313 355 L 325 358 L 352 357 L 363 354 L 378 347 L 387 341 L 397 330 L 433 220 L 434 214 L 441 207 L 447 208 L 468 229 L 475 238 L 487 257 L 497 279 L 504 303 L 505 314 L 506 315 L 506 324 L 507 325 L 507 347 L 506 348 L 505 364 L 500 385 L 493 404 L 480 428 L 465 448 L 448 465 L 434 476 L 415 488 L 393 498 L 384 504 L 373 515 L 363 532 L 359 547 L 359 705 L 362 708 L 369 708 L 409 686 L 456 658 L 544 612 L 564 600 L 626 567 L 640 556 L 651 541 L 657 525 L 657 519 L 658 518 L 658 209 L 654 193 L 648 181 L 641 172 L 629 162 L 532 105 L 525 102 L 518 97 L 511 94 L 492 82 L 485 79 L 478 74 L 356 5 L 343 1 Z";
 
-type Props = {
-  /**
-   * Mark box B in px (brand standard: nav 24, footer 20, auth 40). The mark
-   * renders with the same AREA as a B×B square: width = B·√R, height = B/√R.
-   */
-  size?: number;
-  /** Legacy: wrap the mark in a plain square span. Off by default (bare mark). */
-  tile?: boolean;
-  className?: string;
-};
-
-export default function BrandMark({ size = 24, tile = false, className }: Props) {
+/** The Toolips mark. Colour comes from CSS (`.brand svg`) via currentColor. */
+export default function BrandMark({ size = 24 }: { size?: number }) {
   const sqrtR = Math.sqrt(BRAND_MARK_RATIO);
-  const width = size * sqrtR;
-  const height = size / sqrtR;
-  const svg = (
+  return (
     <svg
       aria-hidden="true"
       focusable="false"
       viewBox={BRAND_MARK_VIEWBOX}
-      width={width}
-      height={height}
-      style={{ display: "block", flex: "none", color: "var(--mark-ink)" }}
+      width={size * sqrtR}
+      height={size / sqrtR}
+      style={{ display: "block", flex: "none" }}
     >
       <path d={BRAND_MARK_PATH} fill="currentColor" fillRule="evenodd" clipRule="evenodd" />
     </svg>
-  );
-  if (!tile) return svg;
-  return (
-    <span
-      className={className}
-      style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", flex: "none", width: size, height: size }}
-    >
-      {svg}
-    </span>
   );
 }

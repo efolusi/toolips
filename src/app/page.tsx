@@ -12,12 +12,12 @@
 // attribute cannot disagree.
 
 import { headers } from "next/headers";
-import { Landing } from "~/components/Landing";
+import { HomePage } from "~/components/HomePage";
 import { isLocale, DEFAULT_LOCALE } from "~/lib/i18n";
 
 export default async function HubPage({ searchParams }: { searchParams: Promise<{ deleted?: string }> }) {
   const { deleted } = await searchParams;
   const header = (await headers()).get("x-locale");
   const locale = isLocale(header) ? header : DEFAULT_LOCALE;
-  return <Landing locale={locale} deleted={Boolean(deleted)} />;
+  return <HomePage locale={locale} deleted={Boolean(deleted)} />;
 }

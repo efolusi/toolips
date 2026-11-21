@@ -25,8 +25,8 @@ describe("cross-locale links", () => {
   });
 
   it("the header language switch goes through LocaleSwitchLink", () => {
-    const nav = readFileSync(join(SRC, "components/SiteNav.tsx"), "utf8");
-    expect(nav).toMatch(/<LocaleSwitchLink\s+locale=\{other\}/);
+    const nav = readFileSync(join(SRC, "components/HeaderBar.tsx"), "utf8");
+    expect(nav).toMatch(/<LocaleSwitchLink\s+locale=\{p\.switchTo\}/);
   });
 
   it("no next/link anywhere targets the other locale", () => {

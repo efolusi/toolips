@@ -120,7 +120,7 @@ describe("other surfaces repeat no unbacked plan claims", () => {
   const unbacked = /priority queu|2 GB|5× faster|soft-capped|1M (API calls|requests)|No watermarks/i;
 
   it.each([
-    "src/app/terms/page.tsx",
+    "src/lib/legal.ts",
     "content/blog/we-charge-four-dollars.md",
   ])("%s", async (relative) => {
     const { readFile } = await import("node:fs/promises");
