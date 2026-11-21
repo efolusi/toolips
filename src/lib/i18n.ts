@@ -549,7 +549,7 @@ const en: Dictionary = {
     colProduct: "Product",
     colResources: "Resources",
     colLegal: "Legal",
-    rights: "All rights reserved.",
+    rights: "Site source is a Meridian reference implementation.",
   },
 };
 
@@ -821,7 +821,7 @@ const id: Dictionary = {
     colProduct: "Produk",
     colResources: "Sumber",
     colLegal: "Legal",
-    rights: "Hak cipta dilindungi.",
+    rights: "Sumber situs ini adalah contoh penerapan Meridian.",
   },
 };
 
